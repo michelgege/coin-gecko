@@ -1,0 +1,15 @@
+input {
+    background: none;
+    border: none;
+    border-bottom: 1px solid $accent_color;
+    width: 100%;
+    color: white;
+    font-family: $main_font;
+    &:focus {
+        outline: none;
+    }
+    &::placeholder {
+        font-size: 120%;
+        font-family: $main_font;
+    }
+}

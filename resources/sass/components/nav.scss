@@ -1,0 +1,28 @@
+nav {
+    ul {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+
+        li {
+            list-style-type : none;
+            margin: 50px 0;
+
+            &:not(first-of-type) {
+                margin-left: 5%;
+            }
+        }
+
+        a {
+            color: $accent_color;
+            text-decoration: none;
+            font-size: 120%;
+
+            &:hover {
+
+                text-decoration: underline;
+                text-decoration-color: $accent_color;
+            }
+        }
+    }
+}
