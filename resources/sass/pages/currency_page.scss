@@ -1,0 +1,27 @@
+
+body.currency_page {
+
+    div.currency {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        img {
+            margin-bottom: 30px;
+        }
+    }
+    div.data_container {
+
+        display: flex;
+        justify-content: space-evenly;
+        font-size: 120%;
+        width: 100%;
+        margin-top: 100px;
+
+        div.currency_infos {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-evenly;
+            flex-direction: column;
+        }
+    }
+}

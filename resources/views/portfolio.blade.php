@@ -11,8 +11,10 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}"/>
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
+
+
 <body class="portfolio_page">
 <div class="wrap">
 
@@ -23,64 +25,33 @@
     @include('components\nav')
     <div class="line"></div>
 
-    @if($total_price == 0)
-        <p>Wow, such empty</p>
-    @else
-        <p>Your portfolio worth {{ $total_price }} €</p>
-    @endif
+    <div class="arrow_container">
+        <img class="arrow" src="/images/arrow-white.svg" alt="">
+    </div>
+
+    <div class="filters_container">
+        <div data-filter="all" class="filter active">All</div>
+        <div data-filter="owned" class="filter">Owned</div>
+        <div data-filter="others" class="filter">Others</div>
+    </div>
+
+
+    <p class="total_amount">Your portfolio worth <span></span> EUR</p>
 
 
     <div class="currencies_container">
-        @foreach($response as $currency)
-            <div class="currency_container" data-id="{{ $currency -> id }}" >
+        @include('partials/portfolio_currencies')
+    </div> <!--div.currencies_container-->
 
-                <img src="{{ $currency -> image }}" alt="logo {{ $currency -> id }}">
-
-                <p class="currency_name">{{ $currency -> name }}</p>
-
-                @if(!empty($portfolio_entries))
-
-                    @foreach($portfolio_entries as $entry)
-
-                        @if($currency->id == $entry->name)
-                            <p class="quantity"> {{ $entry->amount }}</p>
-                            @php( $found = true )
-                            @break
-                        @else
-                            @php( $found = false )
-                        @endif
-
-                    @endforeach
-
-                        @if($found == false)
-                            <p class="quantity">0.00000000</p>
-                        @endif
-                    <form action="{{ route('portfolio-insert') }}" method="post">
-                        @csrf
-                        <input type="hidden" name="name" value="{{ $currency -> id }}">
-                        <input class="amount" type="number" name="amount" placeholder="Quantity" step="0.00000001">
-                    </form>
-
-                @else
-                    <p class="quantity">0.00000000</p>
-                    <form action="{{ route('portfolio-insert') }}" method="post">
-                        @csrf
-                        <input type="hidden" name="name" value="{{ $currency -> id }}">
-                        <input class="amount" type="number" name="amount" placeholder="Quantity" step="0.00000001">
-                    </form>
-                @endif
-
-
-
-
-
-            </div>
-        @endforeach
+    <div class="more_button">
+        <p class="more">See more</p>
+        <p class="loading">Loading...</p>
     </div>
 
 </div> <!--div.wrap-->
 
 <script src="{{ asset('js/portfolio.js') }}"></script>
+<script src="{{ asset('js/common.js') }}"></script>
 
 </body>
 </html>

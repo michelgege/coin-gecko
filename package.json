@@ -21,8 +21,8 @@
         "vue-template-compiler": "^2.6.11"
     },
     "dependencies": {
-        "aos": "^2.3.4",
         "chart.js": "^2.9.3",
-        "chartjs-plugin-crosshair": "^1.1.4"
+        "chartjs-plugin-crosshair": "^1.1.4",
+        "highcharts": "^8.0.4"
     }
 }

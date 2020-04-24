@@ -1,0 +1,50 @@
+body.portfolio_page {
+
+    input.amount {
+        display: none;
+    }
+    div.currency_container {
+        transition-duration: 0.1s;
+        opacity: 0.5;
+        &:hover{
+            transition-duration: 0.2s;
+            opacity: 1;
+        }
+        &[data-filter="owned"] {
+            border: 1px solid $accent_color;
+            opacity: 1;
+        }
+    }
+
+    p.total_amount {
+        font-size: 150%;
+        margin-top: 50px;
+    }
+
+    div.filters_container {
+        display: flex;
+        justify-content: center;
+        border-radius: 5%;
+        margin: 50px 0;
+
+        div.filter {
+            display: flex;
+            align-items: center;
+            background-color: #25272f;
+            padding: 15px;
+            justify-content: center;
+            cursor:pointer;
+
+            &:nth-of-type(n+1) {
+                margin: 0 30px;
+            }
+
+            &.active {
+                color:$accent_color;
+                transform: scale(1.25);
+            }
+
+        }
+    }
+
+}

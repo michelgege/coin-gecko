@@ -10708,15 +10708,164 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
 
+var new_value;
+var target;
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
+  var _this = this;
+
   console.log('ready');
-  jquery__WEBPACK_IMPORTED_MODULE_0___default()('div.currency_container').click(function () {
+  var currencies = jquery__WEBPACK_IMPORTED_MODULE_0___default()('div.currency_container');
+  var filters = jquery__WEBPACK_IMPORTED_MODULE_0___default()('div.filter');
+  var current_page = 1;
+  var current_filter = "all";
+  var totalAmount = jquery__WEBPACK_IMPORTED_MODULE_0___default()('p.total_amount span');
+  refreshOwned();
+  orderCurrencies();
+  refreshTotalAmount();
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()('div.more_button').click(function () {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('div.more_button').css('pointer-events', 'none');
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('div.more_button p.loading').css('display', 'block');
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('div.more_button p.more').css('display', 'none');
+    current_page += 1;
+    jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+      headers: {
+        'X-CSRF-TOKEN': jquery__WEBPACK_IMPORTED_MODULE_0___default()('meta[name="csrf-token"]').attr('content')
+      },
+      type: 'GET',
+      url: '/portfolio/' + current_page,
+      success: function success(response) {
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()('div.currencies_container').append(response);
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()('div.more_button').css('display', 'flex');
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()('div.more_button').css('pointer-events', 'all');
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()('div.more_button p.loading').css('display', 'none');
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()('div.more_button p.more').css('display', 'block');
+        currencies = jquery__WEBPACK_IMPORTED_MODULE_0___default()('div.currency_container');
+        console.log(currencies);
+        refreshOwned();
+        orderCurrencies();
+      }
+    });
+  });
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on('click', 'div.wrap,div.currencies_container', function (e) {
+    if (e.target != this) return;
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('input.amount').blur();
     jquery__WEBPACK_IMPORTED_MODULE_0___default()('input.amount').css('display', 'none');
     jquery__WEBPACK_IMPORTED_MODULE_0___default()('p.quantity').css('display', 'block');
-    jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).find('input.amount').css('display', 'inherit');
+  });
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on('click', 'div.currency_container', function () {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('input.amount').css('display', 'none');
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('p.quantity').css('display', 'block');
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).find('input.amount').css('display', 'block');
     jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).find('input.amount').focus();
     jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).find('p.quantity').css('display', 'none');
+    console.log('clicked currency');
   });
+  filters.click(function () {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()('div.filter').removeClass('active');
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).addClass('active');
+    current_filter = jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).attr('data-filter');
+    applyFilter();
+  });
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on("submit", "form", function (event) {
+    event.preventDefault();
+    target = jquery__WEBPACK_IMPORTED_MODULE_0___default()(event.currentTarget);
+    var formData = {
+      'name': jquery__WEBPACK_IMPORTED_MODULE_0___default()(event.currentTarget).find('input[name=name]').val(),
+      'amount': jquery__WEBPACK_IMPORTED_MODULE_0___default()(event.currentTarget).find('input[name=amount]').val()
+    };
+    console.log(formData);
+    jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+      headers: {
+        'X-CSRF-TOKEN': jquery__WEBPACK_IMPORTED_MODULE_0___default()(_this).find('input[name=_token]').val()
+      },
+      type: 'POST',
+      url: 'portfolio-insert',
+      data: formData,
+      success: function success() {
+        console.log('success callback');
+        jquery__WEBPACK_IMPORTED_MODULE_0___default.a.ajax({
+          headers: {
+            'X-CSRF-TOKEN': jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).find('input[name=_token]').val()
+          },
+          type: 'GET',
+          url: 'portfolio-refresh-currency/' + formData.name,
+          success: function success(response) {
+            console.log({
+              response: response
+            });
+
+            if (response[0].amount !== undefined) {
+              new_value = response[0].amount;
+            } else {
+              new_value = 0;
+            }
+
+            target.siblings("p.quantity").text(new_value);
+            target.siblings("p.quantity").css('display', 'block');
+            target.find("input.amount").css('display', 'none');
+            target.find("input.amount").val('');
+            var price = parseFloat(target.parent("div.currency_container").attr("data-price"));
+            refreshTotalAmount();
+            refreshOwned();
+            applyFilter();
+            orderCurrencies();
+          }
+        });
+      }
+    });
+  });
+
+  function refreshTotalAmount() {
+    var total = 0;
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()("div.currency_container", document.body).each(function () {
+      total += parseFloat(jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).attr('data-price')) * parseFloat(jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).find("p.quantity").text());
+    });
+    console.log(total);
+    totalAmount.text(total);
+  }
+
+  function refreshOwned() {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()("div.currency_container", document.body).each(function () {
+      if (parseFloat(jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).find('p.quantity').text()) !== 0) {
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).attr('data-filter', 'owned');
+      } else {
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).attr('data-filter', 'other');
+      }
+    });
+  }
+
+  function applyFilter() {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()("div.currency_container", document.body).each(function () {
+      if (current_filter === "all") {
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).css('display', 'flex');
+      } else if (current_filter === "others" && jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).attr("data-filter") === "other") {
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).css('display', 'flex');
+      } else if (current_filter === "owned" && jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).attr("data-filter") === "owned") {
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).css('display', 'flex');
+      } else {
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).css('display', 'none');
+      }
+    });
+
+    if (current_filter === "others" || current_filter === "all") {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()('div.more_button').css('display', 'flex');
+    } else {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()('div.more_button').css('display', 'none');
+    }
+  }
+
+  function orderCurrencies() {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()("div.currency_container", document.body).each(function (i) {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).css("order", jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).attr("data-rank"));
+      var duplicates = jquery__WEBPACK_IMPORTED_MODULE_0___default()("div.currency_container[data-rank=" + i + "]").toArray();
+
+      if (duplicates.length > 1) {
+        for (var _i = 1; _i < duplicates.length; _i++) {
+          duplicates[_i].remove();
+        }
+      }
+    });
+  }
 });
 
 /***/ }),

@@ -1,6 +1,5 @@
 //------------------------libs-----------------------------------//
 
-@import './node_modules/aos/dist/aos';
 @import 'libs/_reset';
 
 //-----------------------------------------------------------//
@@ -13,11 +12,12 @@
 
 //-----------------layouts------------------------------------------//
 
-@import 'main';
-@import 'currency_page';
-@import 'portfolio_page';
+@import 'pages/index_page';
+@import 'pages/currency_page';
+@import 'pages/portfolio_page';
 
 //----------------------components-------------------------------------//
 
 @import 'components/nav';
 @import 'components/input';
+@import 'components/chart';

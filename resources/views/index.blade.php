@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Home</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
@@ -20,45 +21,19 @@
 
         <div class="currencies_container">
 
-            @foreach($response as $currency)
-
-                <a href="/currency/{{ $currency -> id }}">
-                    <div class="currency_container" data-id="{{ $currency -> id }}" data-aos="fade-up">
-
-
-                        <img src="{{ $currency -> image }}" alt="logo {{ $currency -> id }}">
-
-                        <p class="currency_name">{{ $currency -> name }}</p>
-
-                        <p class="currency_price">
-                            @if($currency -> price_change_percentage_24h > 0)
-                                <span class="green">
-                                    {{ $currency -> current_price }} EUR
-                                </span>
-                            @elseif ($currency -> price_change_percentage_24h < 0)
-                                <span class="red">
-                                    {{ $currency -> current_price }} EUR
-                                </span>
-                            @else
-                                {{ $currency -> current_price }} EUR
-                            @endif
-                        </p>
-
-                    </div> <!-- currency_container -->
-
-                </a>
-
-            @endforeach
-
-
-
-
+        @include('partials/currencies')
 
         </div> <!-- currencies_container -->
-
+        <div class="more_button">
+            <p class="more">See more</p>
+            <p class="loading">Loading...</p>
+        </div>
      </div><!-- wrap -->
-
+    <div class="arrow_container">
+        <img class="arrow" src="/images/arrow-white.svg" alt="">
+    </div>
 
 <script src="{{ asset('js/index.js') }}"></script>
+<script src="{{ asset('js/common.js') }}"></script>
 </body>
 </html>
