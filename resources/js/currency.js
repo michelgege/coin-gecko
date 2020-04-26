@@ -7,6 +7,8 @@ data(Highcharts);
 let chart;
 const currency_name = $('h1').attr("data-id");
 let chart_created = false;
+let chart_data;
+let data_type = "prices";
 
 function convertTime(UNIX_timestamp){
 
@@ -27,13 +29,17 @@ function requestCurrencyData(days) {
     };
 
     $.ajax(settings).done(function (response) {
+        chart_data = response;
         if(chart_created === false) {
-            createCurrencyChart(response.prices);
+            createCurrencyChart(chart_data[data_type]);
             chart_created = true;
         } else {
-            chart.series[0].setData(response.prices);
+            chart.series[0].setData(chart_data[data_type]);
             $('figure').removeClass('hidden')
         }
+        console.log(data_type);
+        console.log(chart_data);
+        changeChartDataType();
     });
 }
 
@@ -45,10 +51,8 @@ function createCurrencyChart(data) {
                 backgroundColor : null
             },
             title: {
-                text: 'Price in EUR over time',
-                style : {
-                    color : "#fff"
-                }
+                text: null,
+
             },
             subtitle: {
                 text: document.ontouchstart === undefined ?
@@ -69,7 +73,6 @@ function createCurrencyChart(data) {
             },
             yAxis: {
                 title: {
-                    text: 'Price (EUR)',
                     style : {
                         color : "#fff"
                     }
@@ -114,22 +117,45 @@ function createCurrencyChart(data) {
             },
 
             series: [{
-                name: 'Price',
                 data: data
             }]
         });
+
+       let title = $('div.data_type_buttons div.active').attr("data-title");
+       chart.yAxis[0].setTitle({ text: title });
+       chart.series[0].name = title;
 }
 
-function refreshChartData(){
+function refreshChartData() {
 
     $('div.time_buttons div').click((event) => {
-        $('div.time_buttons div').removeClass('active');
-        $(event.currentTarget).addClass('active');
-        $('figure').addClass('hidden');
-        let days = $(event.currentTarget).attr("data-time");
-        requestCurrencyData(days);
+
+        if ($(event.currentTarget).hasClass('active') === false) {
+
+            $('div.time_buttons div').removeClass('active');
+            $(event.currentTarget).addClass('active');
+            $('figure').addClass('hidden');
+            let days = $(event.currentTarget).attr("data-time");
+            requestCurrencyData(days);
+        }
     });
 }
 
-requestCurrencyData(14);
+function changeChartDataType() {
+
+    $('div.data_type_buttons div').click(function (event) {
+
+        $('div.data_type_buttons div').removeClass('active');
+        $(event.currentTarget).addClass('active');
+        data_type = $(event.currentTarget).attr("data-type");
+        let title = $(event.currentTarget).attr("data-title");
+        chart.series[0].setData(chart_data[data_type],true,true,false);
+        chart.series[0].name = title;
+        chart.yAxis[0].setTitle({ text: title });
+
+    });
+}
+
+requestCurrencyData(7);
 refreshChartData();
+

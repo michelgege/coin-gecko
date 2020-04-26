@@ -15,12 +15,11 @@ $(document).ready(function () {
     refreshOwned();
     orderCurrencies();
     refreshTotalAmount();
+    refreshCurrencyTotalPrice();
 
     $('div.more_button').click(() => {
-        $('div.more_button').css('pointer-events','none');
-        $('div.more_button p.loading').css('display', 'block');
-        $('div.more_button p.more').css('display', 'none');
 
+        $('div.more_button').addClass('loading');
         current_page+=1;
         $.ajax({
             headers: {
@@ -29,12 +28,9 @@ $(document).ready(function () {
             type : 'GET',
             url  : '/portfolio/'+current_page,
             success : function (response) {
-                $('div.currencies_container').append(response);
 
-                $('div.more_button').css('display','flex');
-                $('div.more_button').css('pointer-events','all');
-                $('div.more_button p.loading').css('display', 'none');
-                $('div.more_button p.more').css('display', 'block');
+                $('div.currencies_container').append(response);
+                $('div.more_button').removeClass('loading');
 
                 currencies = $('div.currency_container');
                 console.log(currencies);
@@ -49,6 +45,7 @@ $(document).ready(function () {
         $('input.amount').blur();
         $('input.amount').css('display','none');
         $('p.quantity').css('display','block');
+        $('p.portfolio_currency_price').css('display','block');
 
     });
 
@@ -60,11 +57,11 @@ $(document).ready(function () {
     $(document).on('click', 'div.currency_container' ,function () {
 
         $('input.amount').css('display','none');
-        $('p.quantity').css('display','block');
+        $('p.quantity,p.portfolio_currency_price').css('display','block');
 
         $(this).find('input.amount').css('display','block');
         $(this).find('input.amount').focus();
-        $(this).find('p.quantity').css('display','none');
+        $(this).find('p.quantity,p.portfolio_currency_price').css('display','none');
         console.log('clicked currency');
 
     });
@@ -87,6 +84,8 @@ $(document).ready(function () {
             'name': $(event.currentTarget).find('input[name=name]').val(),
             'amount': $(event.currentTarget).find('input[name=amount]').val()
         };
+
+
 
         console.log(formData);
 
@@ -114,7 +113,7 @@ $(document).ready(function () {
                             new_value = 0;
                         }
                         target.siblings("p.quantity").text(new_value);
-                        target.siblings("p.quantity").css('display','block');
+                        target.siblings("p.quantity, p.portfolio_currency_price").css('display','block');
                         target.find("input.amount").css('display','none');
                         target.find("input.amount").val('');
                         let price = parseFloat(target.parent("div.currency_container").attr("data-price"));
@@ -122,6 +121,7 @@ $(document).ready(function () {
                         refreshOwned();
                         applyFilter();
                         orderCurrencies();
+                        refreshCurrencyTotalPrice();
                     }
                 })
             },
@@ -145,6 +145,13 @@ $(document).ready(function () {
             } else {
                 $(this).attr('data-filter','other');
             }
+        });
+    }
+    function refreshCurrencyTotalPrice() {
+
+        $("div.currency_container", document.body).each(function () {
+            let price = parseFloat($(this).attr('data-price')) * parseFloat($(this).find("p.quantity").text());
+            $(this).find("p.portfolio_currency_price span").text(price);
         });
     }
 

@@ -11,14 +11,14 @@
             <p class="currency_price">
                 @if($currency -> price_change_percentage_24h > 0)
                     <span class="green">
-                        {{ $currency -> current_price }} EUR
+                        {{ $currency -> current_price }} {{ Config::get('vars.currency') }}
                     </span>
                 @elseif ($currency -> price_change_percentage_24h < 0)
                     <span class="red">
-                        {{ $currency -> current_price }} EUR
+                        {{ $currency -> current_price }} {{ Config::get('vars.currency') }}
                     </span>
                 @else
-                    {{ $currency -> current_price }} EUR
+                    {{ $currency -> current_price }} {{ Config::get('vars.currency') }}
                 @endif
             </p>
 

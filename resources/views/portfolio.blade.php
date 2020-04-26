@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel</title>
+    <title>Portfolio</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -22,7 +22,7 @@
         <h1>My portfolio</h1>
     </header>
 
-    @include('components\nav')
+    @include('components/nav')
     <div class="line"></div>
 
     <div class="arrow_container">
@@ -36,7 +36,7 @@
     </div>
 
 
-    <p class="total_amount">Your portfolio worth <span></span> EUR</p>
+    <p class="total_amount">Your portfolio worth <span></span> {{ Config::get('vars.currency') }}</p>
 
 
     <div class="currencies_container">

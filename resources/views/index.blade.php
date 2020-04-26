@@ -15,7 +15,7 @@
 
 
     <div class="wrap">
-        @include('components\nav')
+        @include('components/nav')
 
         <div class="line"></div>
 

@@ -14,6 +14,9 @@ body.portfolio_page {
             border: 1px solid $accent_color;
             opacity: 1;
         }
+        p {
+            margin: 5% 0;
+        }
     }
 
     p.total_amount {
@@ -47,4 +50,10 @@ body.portfolio_page {
         }
     }
 
+    div.more_button {
+
+    }
+
 }
+
+

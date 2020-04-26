@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 class ChartController extends Controller
 {
@@ -11,7 +12,7 @@ class ChartController extends Controller
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.coingecko.com/api/v3/coins/$name/market_chart?vs_currency=eur&days=$days",
+            CURLOPT_URL => "https://api.coingecko.com/api/v3/coins/$name/market_chart?vs_currency=".Config::get('vars.currency')."&days=$days",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,

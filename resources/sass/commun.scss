@@ -18,7 +18,7 @@ div.wrap {
 h1 {
     text-align: center;
     margin-top: 100px;
-    font-size: 850%;
+    font-size: 600%;
     color: #636b6f;
 }
 a {
@@ -40,8 +40,6 @@ div.currencies_container {
     margin: 60px 0;
 
     div.currency_container {
-
-        height:200px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -50,9 +48,9 @@ div.currencies_container {
         background-color: $secondary_color;
         color : white;
         font-size: 110%;
-        padding: 10px;
         border-radius: 1%;
         transition-duration: 0.2s;
+        padding: 30px ;
         &:hover {
             transform: scale(1.05);
             transition-duration: 0.4s;
@@ -64,7 +62,7 @@ div.currencies_container {
         }
         //
         img {
-            height: 30%;
+            height: 60px;
         }
         span.red {
             color: $pastel_red;
@@ -86,9 +84,23 @@ div.more_button {
     color: $accent_color;
     margin: 100px auto;
     cursor: pointer;
+    pointer-events: all;
     user-select: none;
+    &.loading {
+        pointer-events: none;
+        p.loading {
+            display: block;
+        }
+        p.more {
+            display: none;
+        }
+    }
     p.loading {
         display: none;
+    }
+
+    p.more{
+        display: block;
     }
 }
 
@@ -111,4 +123,23 @@ span.green {
 }
 span.red {
     color: $pastel_red;
+}
+
+
+@media all and (max-width: 700px) {
+    h1 {
+        font-size: 300%;
+    }
+
+    div.wrap {
+
+        padding: 0 50px;
+
+    }
+}
+
+@media all and (max-width: 540px) {
+    div.wrap {
+        padding: 0 20px;
+    }
 }

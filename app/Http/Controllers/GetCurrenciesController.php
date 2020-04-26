@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 class GetCurrenciesController extends Controller
 {
-
     public function getCurrencies() {
 
         $curl = curl_init();
@@ -15,7 +15,7 @@ class GetCurrenciesController extends Controller
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
         curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&order=market_cap_desc&per_page=50&page=1&sparkline=false",
+        CURLOPT_URL => "https://api.coingecko.com/api/v3/coins/markets?vs_currency=".Config::get('vars.currency')."&order=market_cap_desc&per_page=50&page=1&sparkline=false",
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => "",
         CURLOPT_MAXREDIRS => 10,
@@ -47,7 +47,7 @@ class GetCurrenciesController extends Controller
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&order=market_cap_desc&per_page=50&page=".$page_number."&sparkline=false",
+            CURLOPT_URL => "https://api.coingecko.com/api/v3/coins/markets?vs_currency=".Config::get('vars.currency')."&order=market_cap_desc&per_page=50&page=".$page_number."&sparkline=false",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
